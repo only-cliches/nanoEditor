@@ -6,29 +6,29 @@ Super small and simple code editor inspired by CodeFlask.
 
 - Includes Typescript typings.
 - Plays nice with bablel/ES5 projects.
-- Only **10kb gzipped** (including PrismJS dependency).
+- Only **10kb gzipped** (including PrismJS dependency and styles).
 - Supports HTML, JSX, Typescript, CSS, LESS & SASS out of the box. 
 - Line number support.
 
 ## Install (Browser)
-1. Include the editor CDN in your `<head>` tag.
+1) Include the editor CDN in your `<head>` tag.
 ```html
-<script src="https://cdn.jsdelivr.net/npm/nano-editor@0.0.1/dist/nanoEditor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nano-editor@1.0.0/dist/nanoEditor.min.js"></script>
 ```
 
-2. Include a theme from [cdnjs for PrismJS](https://cdnjs.com/libraries/prism) 1.9.0 in your `head` tag.
+2) Include a theme from [cdnjs for PrismJS](https://cdnjs.com/libraries/prism) 1.9.0 in your `head` tag.
 ```html
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.9.0/themes/prism.min.css" />
 ```
 
 ## Install (Webpack / Browserify / etc)
 
-1. Install this lib from npm.
+1) Install this lib from npm.
 ```sh
 npm i nano-editor --save
 ```
 
-2. Import the lib and a prismjs theme into your project.
+2) Import the lib and a prismjs theme into your project.
 ```js
 import { nanoEditor } from "nano-editor";
 import "prismjs/themes/prism.css";
