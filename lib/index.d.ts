@@ -15,7 +15,6 @@ export declare class nanoEditor {
     preContainer: HTMLPreElement;
     codeContainer: HTMLElement;
     indent: string;
-    private _lastE;
     private _changeListener;
     constructor(inputSel: string | HTMLElement, language?: string, lineNumbers?: boolean);
     setValue(code: string): void;

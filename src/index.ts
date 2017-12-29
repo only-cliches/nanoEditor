@@ -34,7 +34,6 @@ export class nanoEditor {
 	public preContainer: HTMLPreElement;
 	public codeContainer: HTMLElement;
 	public indent: string = "    ";
-	private _lastE: number;
 	private _changeListener: (val: string) => void;
 
 	constructor(inputSel: string | HTMLElement, language: string = "markup", lineNumbers?: boolean) {
@@ -86,6 +85,20 @@ export class nanoEditor {
 	}
 
 	public setLanguage(language: string) {
+
+		switch(language) {
+			case "js":
+				language = "javascript";
+			break;
+			case "ts":
+			case "tsx":
+				language = "typescript";
+			break;
+			case "html":
+				language = "markup";
+			break;
+		}
+
 		var self = this;
 		this._removeLang(this.preContainer);
 		this._removeLang(this.codeContainer);
@@ -102,10 +115,6 @@ export class nanoEditor {
 		const self = this;
 
 		const onChange = function (e: KeyboardEvent) {
-			if (self._lastE && e.timeStamp - self._lastE < 50) {
-				return;
-			}
-			self._lastE = e.timeStamp;
 
 			// stolen directly from https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 			if (e.keyCode === 9) {
@@ -208,7 +217,18 @@ export class nanoEditor {
 	}
 
 	private renderOutput(value: string) {
-		const htmlSet = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "\n";
+		const entityMap = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			"\"": "&quot;",
+			"'": "&#39;",
+			"/": "&#x2F;",
+			"`": "&#x60;",
+			"=": "&#x3D;"
+		};
+
+		const htmlSet = value.replace(/[&<>"'`=\/]/gmi, (s) => entityMap[s]) + "\n"; // random others
 		this.codeContainer.innerHTML = htmlSet;
 		if (this._changeListener) {
 			this._changeListener(value);
