@@ -91,6 +91,7 @@ export class nanoEditor {
 		this._removeLang(this.codeContainer);
 		this.preContainer.classList.add(`language-${language}`);
 		this.codeContainer.classList.add(`language-${language}`);
+		Prism.highlightElement(this.codeContainer);
 	}
 
 	public onChange(callback: (val: string) => void) {
