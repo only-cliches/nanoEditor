@@ -11,29 +11,17 @@ import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "./style.css";
 
-const Prism: any = PrismJS;
+import * as debounce from "debounce";
 
-const debounce = function(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-	};
-};
+const Prism: any = PrismJS;
 
 export class nanoEditor {
 
 	public container: HTMLElement;
-	public textArea: HTMLTextAreaElement;
-	public preContainer: HTMLPreElement;
-	public codeContainer: HTMLElement;
-	public indent: string = "    ";
+	private _text: HTMLTextAreaElement;
+	private _pre: HTMLPreElement;
+	private _code: HTMLElement;
+	private _tab: string = "    ";
 	private _changeListener: (val: string) => void;
 
 	constructor(inputSel: string | HTMLElement, language: string = "markup", lineNumbers?: boolean) {
@@ -51,26 +39,26 @@ export class nanoEditor {
 		this.container.innerHTML = "";
 		this.container.classList.add("nanoEditor-body");
 
-		this.textArea = document.createElement("textarea");
-		this.textArea.setAttribute('spellcheck', 'false');
-		this.textArea.setAttribute('autocapitalize', 'off');
-		this.textArea.setAttribute('autocomplete', 'off');
-		this.textArea.setAttribute('autocorrect', 'off');
-		this.textArea.classList.add("code-input");
-		this.textArea.value = theCode;
+		this._text = document.createElement("textarea");
+		this._text.setAttribute('spellcheck', 'false');
+		this._text.setAttribute('autocapitalize', 'off');
+		this._text.setAttribute('autocomplete', 'off');
+		this._text.setAttribute('autocorrect', 'off');
+		this._text.classList.add("code-input");
+		this._text.value = theCode;
 
-		this.container.appendChild(this.textArea);
+		this.container.appendChild(this._text);
 
-		this.preContainer = document.createElement("pre");
-		this.preContainer.classList.add("code-output");
+		this._pre = document.createElement("pre");
+		this._pre.classList.add("code-output");
 		if (lineNumbers) {
-			this.preContainer.classList.add("line-numbers");
-			this.textArea.classList.add("line-numbers");
+			this._pre.classList.add("line-numbers");
+			this._text.classList.add("line-numbers");
 		}
 
-		this.container.appendChild(this.preContainer);
-		this.codeContainer = document.createElement("code");
-		this.preContainer.appendChild(this.codeContainer);
+		this.container.appendChild(this._pre);
+		this._code = document.createElement("code");
+		this._pre.appendChild(this._code);
 
 		this.focusInput();
 		this.listenForInput();
@@ -79,8 +67,18 @@ export class nanoEditor {
 		this.listenerForScroll();
 	}
 
+	public canEdit(setTo: boolean) {
+		if (setTo === true) {
+			this._text.style.display = "block";
+			this._pre.style.pointerEvents = "none";
+		} else {
+			this._text.style.display = "none";
+			this._pre.style.pointerEvents = "all";
+		}
+	}
+
 	public setValue(code: string) {
-		this.textArea.value = code;
+		this._text.value = code;
 		this.renderOutput(code);
 	}
 
@@ -94,17 +92,14 @@ export class nanoEditor {
 			case "tsx":
 				language = "typescript";
 			break;
-			case "html":
-				language = "markup";
-			break;
 		}
 
 		var self = this;
-		this._removeLang(this.preContainer);
-		this._removeLang(this.codeContainer);
-		this.preContainer.classList.add(`language-${language}`);
-		this.codeContainer.classList.add(`language-${language}`);
-		Prism.highlightElement(this.codeContainer);
+		this._removeLang(this._pre);
+		this._removeLang(this._code);
+		this._pre.classList.add(`language-${language}`);
+		this._code.classList.add(`language-${language}`);
+		Prism.highlightElement(this._code);
 	}
 
 	public onChange(callback: (val: string) => void) {
@@ -114,12 +109,15 @@ export class nanoEditor {
 	private listenForInput() {
 		const self = this;
 
+		let isTab: boolean = false;
+
 		const onChange = function (e: KeyboardEvent) {
 
 			// stolen directly from https://github.com/kazzkiq/CodeFlask.js/blob/master/src/codeflask.js
 			if (e.keyCode === 9) {
-
 				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
 				var input = this,
 					selectionDir = input.selectionDirection,
 					selStartPos = input.selectionStart,
@@ -130,36 +128,36 @@ export class nanoEditor {
 					selectionVal = inputVal.substring(selStartPos, selEndPos),
 					afterSelection = inputVal.substring(selEndPos);
 
-				if (selStartPos !== selEndPos && selectionVal.length >= self.indent.length) {
+				if (selStartPos !== selEndPos && selectionVal.length >= self._tab.length) {
 
 
 					var currentLineStart = selStartPos - beforeSelection.split('\n').pop().length,
-						startIndentLen = self.indent.length,
-						endIndentLen = self.indent.length;
+						startIndentLen = self._tab.length,
+						endIndentLen = self._tab.length;
 
 					//Unindent
 					if (e.shiftKey) {
-						var currentLineStartStr = inputVal.substr(currentLineStart, self.indent.length);
+						var currentLineStartStr = inputVal.substr(currentLineStart, self._tab.length);
 						//Line start whit indent
-						if (currentLineStartStr === self.indent) {
+						if (currentLineStartStr === self._tab) {
 
 							startIndentLen = -startIndentLen;
 
 							//Indent is in selection
 							if (currentLineStart > selStartPos) {
-								selectionVal = selectionVal.substring(0, currentLineStart) + selectionVal.substring(currentLineStart + self.indent.length);
+								selectionVal = selectionVal.substring(0, currentLineStart) + selectionVal.substring(currentLineStart + self._tab.length);
 								endIndentLen = 0;
 							}
 							//Indent is in start of selection
 							else if (currentLineStart == selStartPos) {
 								startIndentLen = 0;
 								endIndentLen = 0;
-								selectionVal = selectionVal.substring(self.indent.length);
+								selectionVal = selectionVal.substring(self._tab.length);
 							}
 							//Indent is before selection
 							else {
 								endIndentLen = -endIndentLen;
-								beforeSelection = beforeSelection.substring(0, currentLineStart) + beforeSelection.substring(currentLineStart + self.indent.length);
+								beforeSelection = beforeSelection.substring(0, currentLineStart) + beforeSelection.substring(currentLineStart + self._tab.length);
 							}
 
 						}
@@ -168,12 +166,12 @@ export class nanoEditor {
 							endIndentLen = 0;
 						}
 
-						selectionVal = selectionVal.replace(new RegExp('\n' + self.indent.split('').join('\\'), 'g'), '\n');
+						selectionVal = selectionVal.replace(new RegExp('\n' + self._tab.split('').join('\\'), 'g'), '\n');
 					}
 					//Indent
 					else {
-						beforeSelection = beforeSelection.substr(0, currentLineStart) + self.indent + beforeSelection.substring(currentLineStart, selStartPos);
-						selectionVal = selectionVal.replace(/\n/g, '\n' + self.indent);
+						beforeSelection = beforeSelection.substr(0, currentLineStart) + self._tab + beforeSelection.substring(currentLineStart, selStartPos);
+						selectionVal = selectionVal.replace(/\n/g, '\n' + self._tab);
 					}
 
 					//Set new indented value
@@ -185,20 +183,38 @@ export class nanoEditor {
 
 				}
 				else {
-					input.value = beforeSelection + self.indent + afterSelection;
-					input.selectionStart = selStartPos + self.indent.length;
-					input.selectionEnd = selStartPos + self.indent.length;
+					input.value = beforeSelection + self._tab + afterSelection;
+					input.selectionStart = selStartPos + self._tab.length;
+					input.selectionEnd = selStartPos + self._tab.length;
 				}
-
+				self.renderOutput(this.value);
+				return false;
 			}
 
 			self.renderOutput(this.value);
 		};
 
-		const bounceChnage = debounce(onChange, 50, false);
-
-		this.textArea.addEventListener("input", bounceChnage);
-		this.textArea.addEventListener("keydown", bounceChnage);
+		// Firefox fix
+		this._text.addEventListener("keydown", function(e) {
+			isTab = false;
+			if (e.keyCode === 9) {
+				isTab = true;
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+			}
+		});
+		this._text.addEventListener("keypress", function(e) { 
+			if (!isTab) { 
+				return true
+			} 
+			e.preventDefault(); 
+			e.stopPropagation(); 
+			return false;
+		}); 
+		const debounceChange = debounce(onChange, 30);
+		this._text.addEventListener("input", debounceChange);
+		this._text.addEventListener("keyup", debounceChange);
 	}
 
 	private _removeLang(elem: HTMLElement) {
@@ -211,8 +227,8 @@ export class nanoEditor {
 
 	private listenerForScroll() {
 		const parent = this;
-		this.textArea.addEventListener("scroll", function () {
-			parent.preContainer.scrollTop = this.scrollTop;
+		this._text.addEventListener("scroll", function () {
+			parent._pre.scrollTop = this.scrollTop;
 		});
 	}
 
@@ -228,17 +244,17 @@ export class nanoEditor {
 			"=": "&#x3D;"
 		};
 
-		const htmlSet = value.replace(/[&<>"'`=\/]/gmi, (s) => entityMap[s]) + "\n"; // random others
-		this.codeContainer.innerHTML = htmlSet;
+		const htmlSet = value.replace(/[&<>"'`=\/]/gmi, (s) => entityMap[s]) + "\n";
+		this._code.innerHTML = htmlSet;
 		if (this._changeListener) {
 			this._changeListener(value);
 		}
-		Prism.highlightElement(this.codeContainer);
+		Prism.highlightElement(this._code);
 	}
 
 	private focusInput() {
-		this.textArea.focus();
-		this.textArea.selectionStart = 0;
-		this.textArea.selectionEnd = 0;
+		this._text.focus();
+		this._text.selectionStart = 0;
+		this._text.selectionEnd = 0;
 	}
 }

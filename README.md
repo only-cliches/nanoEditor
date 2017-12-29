@@ -1,19 +1,19 @@
 # nanoEditor
 
-Super small and simple code editor inspired by CodeFlask.
+Super small and simple code editor inspired by CodeFlask.js.
 
 <img src="https://raw.githubusercontent.com/ClickSimply/nanoEditor/master/preview.png" alt="Demo">
 
 - Includes Typescript typings.
-- Plays nice with bablel/ES5 projects.
-- Only **10kb gzipped** (including PrismJS dependency and styles).
-- Supports HTML, JSX, Typescript, CSS, LESS & SASS out of the box. 
-- Line number support.
+- Plays nice with babel/ES5 projects.
+- Only **Just 11kb gzipped** (including PrismJS dependency and styles).
+- Supports HTML, JSX, JSON, Typescript, CSS, LESS & SASS out of the box. 
+- Line number support is also included in the bundle.
 
 ## Install (Browser)
 1) Include the editor CDN in your `<head>` tag.
 ```html
-<script src="https://cdn.jsdelivr.net/npm/nano-editor@1.0.0/dist/nanoEditor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nano-editor@1.2.3/dist/nanoEditor.min.js"></script>
 ```
 
 2) Include a theme from [cdnjs for PrismJS](https://cdnjs.com/libraries/prism) 1.9.0 in your `head` tag.
@@ -47,10 +47,16 @@ Once you've setup an instance, there are a few public methods you can use:
 Accepts a single function as it's argument, the function will get called each time the editor is updated.  The function will also have the editor's value passed into it.
 
 ### .setLanguage(language: string)
-Change the language of the editor inline.
+Change the language of the editor.
 
 ### .setValue(value: string)
 Sets the contents of the editor.
+
+### .canEdit(yesOrNo: boolean)
+Set the element as editable or not.
+
+### .container
+The HTML element the editor is attached to.
 
 ## Example
 ```html
@@ -58,8 +64,8 @@ Sets the contents of the editor.
     alert("Dont taze me bro.");
 </div>
 <script>
-    const editor = new nanoEditor("#code", "javascript");
-    editor.setValue("alert(Don't move BRO!)");
+    const editor = new nanoEditor("#code", "javascript", true);
+    editor.setValue("alert(\"Don't move BRO!\")");
 </script>
 ```
 

@@ -11,12 +11,13 @@ import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "./style.css";
 export declare class nanoEditor {
     container: HTMLElement;
-    textArea: HTMLTextAreaElement;
-    preContainer: HTMLPreElement;
-    codeContainer: HTMLElement;
-    indent: string;
+    private _text;
+    private _pre;
+    private _code;
+    private _tab;
     private _changeListener;
     constructor(inputSel: string | HTMLElement, language?: string, lineNumbers?: boolean);
+    canEdit(setTo: boolean): void;
     setValue(code: string): void;
     setLanguage(language: string): void;
     onChange(callback: (val: string) => void): void;
