@@ -16,7 +16,7 @@
 
 .nanoEditor-body .code-input.line-numbers,
 .nanoEditor-body .code-output.line-numbers {
-    padding-left: 2rem !important;
+    padding-left: 2.5rem !important;
 }
 .nanoEditor-body .code-input,
 .nanoEditor-body .code-output {
