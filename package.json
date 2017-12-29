@@ -1,5 +1,5 @@
 {
-  "name": "nanoEditor",
+  "name": "nano-editor",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -11,9 +11,14 @@
     "type": "git",
     "url": "git+https://github.com/ClickSimply/nanoEditor.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "code-editor",
+    "code",
+    "syntax-highlight",
+    "highlight"
+  ],
+  "author": "Scott Lott <me@ScottLott.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ClickSimply/nanoEditor/issues"
   },
