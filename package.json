@@ -1,0 +1,32 @@
+{
+  "name": "nanoEditor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc && webpack -p && cp src/style.css lib/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ClickSimply/nanoEditor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ClickSimply/nanoEditor/issues"
+  },
+  "homepage": "https://github.com/ClickSimply/nanoEditor#readme",
+  "dependencies": {
+    "prismjs": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/prismjs": "^1.9.0",
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.1",
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  }
+}

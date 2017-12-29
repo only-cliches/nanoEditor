@@ -1,0 +1,63 @@
+.nanoEditor-body *,
+.nanoEditor-body *:before,
+.nanoEditor-body *:after {
+    box-sizing: border-box;
+}
+
+.nanoEditor-body *:focus {
+    outline: none;
+}
+
+.nanoEditor-body {
+    position: relative;
+    min-width: 300px;
+    min-height: 100px;
+}
+
+.nanoEditor-body .code-input.line-numbers,
+.nanoEditor-body .code-output.line-numbers {
+    padding-left: 2rem !important;
+}
+.nanoEditor-body .code-input,
+.nanoEditor-body .code-output {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    border: none;
+    font-family: 'PT Mono', monospace;
+    font-size: 0.8rem;
+    background: transparent;
+    white-space: pre-wrap;
+    line-height: 1.5em;
+    word-wrap: break-word;
+}
+
+.nanoEditor-body .code-input {
+    opacity: 1;
+    margin: 0;
+    color: transparent;
+    caret-color:black;
+    resize: none;
+}
+
+.nanoEditor-body .code-output {
+    pointer-events: none;
+    z-index: 3;
+    margin: 0;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+
+.nanoEditor-body .code-output code {
+    display: block;
+    color: #666;
+    font-size: 0.8rem;
+    font-family: 'PT Mono', monospace;
+}
+
+.nanoEditor-body a.token {
+    text-decoration: none;
+}

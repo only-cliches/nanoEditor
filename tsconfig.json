@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES5",
+        "noImplicitReturns": false,
+        "preserveConstEnums": true,
+        "experimentalDecorators": true,
+        "removeComments": true,
+        "sourceMap": false,
+        "noEmit": false,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "skipDefaultLibCheck": true,
+        "declaration": true,
+        "declarationDir": "./lib",
+        "outDir": "./lib"
+    },
+    "files": [
+        "./src/index.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
