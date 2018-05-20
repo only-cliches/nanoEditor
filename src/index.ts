@@ -60,7 +60,7 @@ export class nanoEditor {
 		this._code = document.createElement("code");
 		this._pre.appendChild(this._code);
 
-		this.focusInput();
+		// this.focusInput();
 		this.listenForInput();
 		this.setLanguage(language);
 		this.renderOutput(theCode);
