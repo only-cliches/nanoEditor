@@ -21,9 +21,9 @@ export declare class nanoEditor {
     setValue(code: string): void;
     setLanguage(language: string): void;
     onChange(callback: (val: string) => void): void;
-    private listenForInput();
-    private _removeLang(elem);
-    private listenerForScroll();
-    private renderOutput(value);
-    private focusInput();
+    private listenForInput;
+    private _removeLang;
+    private listenerForScroll;
+    private renderOutput;
+    private focusInput;
 }

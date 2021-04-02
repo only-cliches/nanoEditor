@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Nano Editor</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="style.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/themes/prism-dark.min.css" integrity="sha512-Njdz7T/p6Ud1FiTMqH87bzDxaZBsVNebOWmacBjMdgWyeIhUSFU4V52oGwo3sT+ud+lyIE98sS291/zxBfozKw==" crossorigin="anonymous" />
+  </head>
+
+  <body>
+    <div id="#code">
+      alert("Dont taze me bro.");
+    </div>
+    <script src="nanoEditor.min.js"></script>
+    <script>
+      const editor = new nanoEditor("#code", "javascript", true);
+      editor.setValue("alert(\"Don't move BRO!\")");
+    </script>
+  </body>
+
+</html>
